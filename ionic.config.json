@@ -1,0 +1,7 @@
+{
+  "name": "ricanmorti",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
