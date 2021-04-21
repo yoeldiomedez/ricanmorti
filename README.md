@@ -1,6 +1,6 @@
 # ricanmorti
 
-cross-platform dev-training using Ionic and Rick and Morty API
+cross-platform dev-training using [Ionic](https://ionicframework.com/docs/) and [Rick and Morty API](https://rickandmortyapi.com/documentation/)
 
 ## Generate app-debug.apk without Android Studio
 

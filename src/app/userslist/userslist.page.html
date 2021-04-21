@@ -19,6 +19,12 @@
             <ion-label>{{character.name}}</ion-label>
           </ion-item>
         </ion-list>
+        <ion-infinite-scroll (ionInfinite)="loadMoreCharacters($event)">
+          <ion-infinite-scroll-content
+            loadingSpinner="bubbles"
+            loadingText="Loading more characters...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
       </ion-col>
     </ion-row>
   </ion-grid>
