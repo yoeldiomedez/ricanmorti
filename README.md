@@ -2,7 +2,9 @@
 
 cross-platform dev-training using Ionic and Rick and Morty API
 
-## generate app-debug.apk without Android Studio
+## Generate app-debug.apk without Android Studio
+
+The following steps were tested on a [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) environment
 
 1. Build web assets and prepare your app for android platform
 
