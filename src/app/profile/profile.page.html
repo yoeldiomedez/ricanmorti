@@ -16,7 +16,12 @@
             <ion-card-content class="ion-text-center">
               <img src="{{character.image}}" alt="{{character.name}}">
               <ion-card-title>{{character.name}}</ion-card-title>
-              <ion-badge [color]="character.status == 'Alive' ? 'success' : 'danger'">{{character.status}}</ion-badge>
+              <ion-card-subtitle>
+                <ion-icon name="location"></ion-icon> {{character.origin.name}} / {{character.location.name}}
+              </ion-card-subtitle>
+              <ion-badge [color]="character.status == 'Alive' ? 'success' : character.status == 'Dead' ? 'danger' : 'medium'">
+                {{character.status}} - {{character.species}}
+              </ion-badge>
             </ion-card-content>
           </ion-card>
         </div>
