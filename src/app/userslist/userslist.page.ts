@@ -12,14 +12,19 @@ export class UserslistPage implements OnInit {
 
   characters: Array<any>;
   pages: Number;
+
   page = 1;
+  status = '';
+  gender = '';
+
+  endPoint = (page, status='', gender='') => `https://rickandmortyapi.com/api/character?page=${page}&status=${status}&gender=${gender}`;
   
   constructor(
     private http: HttpClient
   ) { }
 
   ngOnInit() {
-    this.http.get<any>('https://rickandmortyapi.com/api/character?page=' + this.page).subscribe(
+    this.http.get<any>(this.endPoint(this.page)).subscribe(
       res => {
         // console.log(res);
         this.characters = res.results;
@@ -33,7 +38,7 @@ export class UserslistPage implements OnInit {
     if (this.page == this.pages) {
       event.target.disabled = true;
     } else {
-      this.http.get<any>('https://rickandmortyapi.com/api/character?page=' + this.page).subscribe(
+      this.http.get<any>(this.endPoint(this.page, this.status, this.gender)).subscribe(
         res => {
           // console.log(res);
           for (const character of res.results) {
@@ -43,5 +48,33 @@ export class UserslistPage implements OnInit {
         }
       )
     }
+  }
+
+  getByStatusCharacter(statusCharacter){
+    this.status = statusCharacter;
+    this.http.get<any>(this.endPoint(this.page, this.status, this.gender)).subscribe(
+      res => {
+        // console.log(res);
+        while(this.characters.length > 0) {
+          this.characters.pop();
+        }
+        this.characters = res.results;
+        this.pages = res.info.pages;
+      }
+    )
+  }
+
+  getByGenderCharacter(genderCharacter){
+    this.gender = genderCharacter;
+    this.http.get<any>(this.endPoint(this.page, this.status, this.gender)).subscribe(
+      res => {
+        // console.log(res);
+        while(this.characters.length > 0) {
+          this.characters.pop();
+        }
+        this.characters = res.results;
+        this.pages = res.info.pages;
+      }
+    )
   }
 }
