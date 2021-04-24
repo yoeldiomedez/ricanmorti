@@ -13,13 +13,15 @@ export class UserslistPage implements OnInit {
   toggledSearchBar: Boolean;
   characters: Array<any>;
   nextPage: string;
-  
+  errorMsg: string;
+
   name: string;
   status: string;
   gender: string;
   
   constructor(private http: HttpClient) { 
     this.toggledSearchBar = false;
+    this.errorMsg = '';
     this.name = '';
     this.status = '';
     this.gender = '';
@@ -31,6 +33,10 @@ export class UserslistPage implements OnInit {
         // console.log(res);
         this.characters = res.results;
         this.nextPage = res.info.next;
+      },
+      error => {
+        this.characters = [];
+        this.errorMsg = error.error.error;
       }
     )
   }
@@ -43,12 +49,13 @@ export class UserslistPage implements OnInit {
     this.toggledSearchBar = !this.toggledSearchBar;
   }
 
-  loadMoreCharacters(event:any) {
+  loadData(event:any) {
     if (this.nextPage == null) {
       event.target.disabled = true;
     } else {
       this.http.get<any>(this.nextPage).subscribe(
         res => {
+          this.errorMsg = '';
           // console.log(res);
           this.nextPage = res.info.next;
           for (const character of res.results) {
@@ -56,49 +63,68 @@ export class UserslistPage implements OnInit {
           }
           // console.log(this.nextPage)
           event.target.complete();
+        },
+        error => {
+          this.characters = [];
+          this.errorMsg = error.error.error;
         }
       )
     }
   }
 
-  getByStatusCharacter(statusCharacter){
-    this.status = statusCharacter;
+  getByStatus(status:string){
+    this.status = status;
     this.http.get<any>(this.getEndpoint(this.name, this.status, this.gender)).subscribe(
       res => {
         // console.log(res);
         while(this.characters.length > 0) {
           this.characters.pop();
         }
+        this.errorMsg = '';
         this.characters = res.results;
         this.nextPage = res.info.next;
+      },
+      error => {
+        this.characters = [];
+        this.errorMsg = error.error.error;
       }
     )
   }
 
-  getByGenderCharacter(genderCharacter){
-    this.gender = genderCharacter;
+  getByGender(gender:string){
+    this.gender = gender;
     this.http.get<any>(this.getEndpoint(this.name, this.status, this.gender)).subscribe(
       res => {
         // console.log(res);
         while(this.characters.length > 0) {
           this.characters.pop();
         }
+        this.errorMsg = '';
         this.characters = res.results;
         this.nextPage = res.info.next;        
+      },
+      error => {
+        this.characters = [];
+        this.errorMsg = error.error.error;
       }
     )
   }
 
-  searchByCharacterName(event:any){
-    this.name = event.target.value.trim();
+  searchByName(event:any){
+    this.name = event.target.value.trim().toLowerCase();
     this.http.get<any>(this.getEndpoint(this.name, this.status, this.gender)).subscribe(
       res => {
         // console.log(res);
         while(this.characters.length > 0) {
           this.characters.pop();
         }
+        this.errorMsg = '';
         this.characters = res.results;
         this.nextPage = res.info.next;
+      },
+      error => {
+        this.characters = [];
+        this.errorMsg = error.error.error;
       }
     )
   }
