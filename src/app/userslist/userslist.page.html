@@ -11,10 +11,10 @@
     </ion-buttons>
     <ion-searchbar
        *ngIf="toggledSearchBar"
-       [(ngModel)]="characterName"
        (ionInput)="searchByName($event)"
        (ionCancel)="toggleSearchBar()"
-       [showCancelButton]="true">
+       [showCancelButton]="true"
+    >
     </ion-searchbar>
   </ion-toolbar>
 </ion-header>
