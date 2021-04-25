@@ -28,6 +28,14 @@ export class UserslistPage implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => { this.getCharacterList() }, 1000);
+  }
+
+  toggleSearchBar() {
+    this.toggledSearchBar = !this.toggledSearchBar;
+  }
+
+  getCharacterList() {
     this.http.get<any>('https://rickandmortyapi.com/api/character').subscribe(
       res => {
         // console.log(res);
@@ -44,12 +52,13 @@ export class UserslistPage implements OnInit {
   getEndpoint(name:string, status:string, gender:string) {
     return `https://rickandmortyapi.com/api/character?name=${name}&status=${status}&gender=${gender}`;
   }
-  
-  toggleSearchBar() {
-    this.toggledSearchBar = !this.toggledSearchBar;
+
+  refreshContent(event:any) {
+      this.getCharacterList();
+      event.target.complete(); 
   }
 
-  loadData(event:any) {
+  loadNextPage(event:any) {
     if (this.nextPage == null) {
       event.target.disabled = true;
     } else {
@@ -70,6 +79,25 @@ export class UserslistPage implements OnInit {
         }
       )
     }
+  }
+
+  searchByName(event:any){
+    this.name = event.target.value.trim().toLowerCase();
+    this.http.get<any>(this.getEndpoint(this.name, this.status, this.gender)).subscribe(
+      res => {
+        // console.log(res);
+        while(this.characters.length > 0) {
+          this.characters.pop();
+        }
+        this.errorMsg = '';
+        this.characters = res.results;
+        this.nextPage = res.info.next;
+      },
+      error => {
+        this.characters = [];
+        this.errorMsg = error.error.error;
+      }
+    )
   }
 
   getByStatus(status:string){
@@ -102,25 +130,6 @@ export class UserslistPage implements OnInit {
         this.errorMsg = '';
         this.characters = res.results;
         this.nextPage = res.info.next;        
-      },
-      error => {
-        this.characters = [];
-        this.errorMsg = error.error.error;
-      }
-    )
-  }
-
-  searchByName(event:any){
-    this.name = event.target.value.trim().toLowerCase();
-    this.http.get<any>(this.getEndpoint(this.name, this.status, this.gender)).subscribe(
-      res => {
-        // console.log(res);
-        while(this.characters.length > 0) {
-          this.characters.pop();
-        }
-        this.errorMsg = '';
-        this.characters = res.results;
-        this.nextPage = res.info.next;
       },
       error => {
         this.characters = [];

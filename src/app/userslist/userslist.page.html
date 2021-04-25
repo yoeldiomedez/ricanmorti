@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="!toggledSearchBar">Characters</ion-title>
-    <ion-buttons slot="end">
+    <ion-buttons *ngIf="!toggledSearchBar" slot="end">
       <ion-button (click)="toggleSearchBar()">
         <ion-icon slot="icon-only" name="search-sharp"></ion-icon>
       </ion-button>
@@ -20,6 +20,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshContent($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-grid>
     <ion-row>
       <ion-col sizeMd="2" offsetMd="4">
@@ -52,12 +55,22 @@
           </ion-item>
           <ion-item *ngFor="let character of characters" [routerLink]="['/profile/' + character.id]">
             <ion-avatar slot="start">
-              <ion-img src="{{character.image}}" alt="{{character.name}}"></ion-img>
+              <ion-img [src]="character.image" alt="{{character.name}}"></ion-img>
             </ion-avatar>
             <ion-label>{{character.name}}</ion-label>
           </ion-item>
         </ion-list>
-        <ion-infinite-scroll (ionInfinite)="loadData($event)">
+        <ion-list *ngIf="!characters">
+          <ion-item *ngFor="let item of [].constructor(20)">
+            <ion-avatar slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            <ion-label>
+              <ion-skeleton-text animated style="width: 100%;"></ion-skeleton-text>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-infinite-scroll (ionInfinite)="loadNextPage($event)">
           <ion-infinite-scroll-content
             loadingText="Loading more characters...">
           </ion-infinite-scroll-content>
