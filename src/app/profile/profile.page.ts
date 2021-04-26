@@ -10,21 +10,28 @@ import { HttpClient } from '@angular/common/http';
 export class ProfilePage implements OnInit {
 
   profileId: String;
-  character;
+  isLoading: Boolean;
+  errorMsg: string;
+  character: any;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private http: HttpClient
-  ) { }
+  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient) {
+    this.isLoading = true;
+  }
 
   ngOnInit() {
     this.profileId = this.activatedRoute.snapshot.paramMap.get('id')
-    this.http.get<any>('https://rickandmortyapi.com/api/character/' + this.profileId).subscribe(
-      res => {
-        // console.log(res);
-        this.character = res;
-      }
-    )
+    setTimeout(() => {
+      this.http.get<any>('https://rickandmortyapi.com/api/character/' + this.profileId).subscribe(
+        res => {
+          // console.log(res);
+          this.character = res;
+          this.isLoading = false;
+        },
+        error => {
+          this.errorMsg = error.error.error;
+          this.isLoading = false;
+        }
+      )
+     }, 1000);
   }
-
 }

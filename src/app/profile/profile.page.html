@@ -8,9 +8,15 @@
 </ion-header>
 
 <ion-content>
+  <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar>
   <ion-grid>
     <ion-row>
       <ion-col sizeMd="4" offsetMd="4">
+        <ion-list *ngIf="errorMsg">
+          <ion-item color="danger" class="ion-text-center">
+            <ion-label>{{errorMsg}}</ion-label>
+          </ion-item>
+        </ion-list>
         <div *ngIf="character">
           <ion-card>
             <ion-card-content class="ion-text-center">

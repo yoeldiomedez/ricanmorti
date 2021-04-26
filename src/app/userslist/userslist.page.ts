@@ -11,16 +11,18 @@ export class UserslistPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   toggledSearchBar: Boolean;
-  characters: Array<any>;
+  isLoading: Boolean;
   nextPage: string;
   errorMsg: string;
-
-  name: string;
+  
+  characters: Array<any>;
   status: string;
   gender: string;
+  name: string;
   
   constructor(private http: HttpClient) { 
     this.toggledSearchBar = false;
+    this.isLoading = true;
     this.errorMsg = '';
     this.name = '';
     this.status = '';
@@ -28,7 +30,10 @@ export class UserslistPage implements OnInit {
   }
 
   ngOnInit() {
-    setTimeout(() => { this.getCharacterList() }, 1000);
+    setTimeout(() => { 
+      this.getCharacterList();
+      this.isLoading = false;
+    }, 1000);
   }
 
   toggleSearchBar() {
@@ -54,8 +59,13 @@ export class UserslistPage implements OnInit {
   }
 
   refreshContent(event:any) {
-      this.getCharacterList();
-      event.target.complete(); 
+    this.toggledSearchBar = false;
+    this.errorMsg = '';
+    this.name = '';
+    this.status = '';
+    this.gender = '';
+    this.getCharacterList();
+    event.target.complete(); 
   }
 
   loadNextPage(event:any) {
